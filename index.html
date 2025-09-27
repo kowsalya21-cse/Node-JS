@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Cart</title>
+</head>
+<body>
+  <h2>Shopping Cart</h2>
+  <input type="text" id="item" placeholder="Item Name">
+  <input type="number" id="price" placeholder="Price">
+  <button onclick="addItem()">Add Item</button>
+
+  <h3>Cart Items:</h3>
+  <ul id="cartList"></ul>
+
+  <script>
+    let cart = [];
+
+    function addItem() {
+      let item = document.getElementById('item').value;
+      let price = document.getElementById('price').value;
+      cart.push({name: item, price: price});
+      renderCart();
+    }
+
+    function renderCart() {
+      let list = document.getElementById('cartList');
+      list.innerHTML = '';
+      cart.forEach(i => {
+        list.innerHTML += `<li>${i.name} - $${i.price}</li>`;
+      });
+    }
+  </script>
+</body>
+</html>
