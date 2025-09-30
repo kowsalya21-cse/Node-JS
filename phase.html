@@ -1,0 +1,163 @@
+Frontend example:(html)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Enhanced Shopping Cart</title>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 20px;
+    }
+    h2 {
+color: #333;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    input[type="text"], input[type="number"] {
+      padding: 8px;
+      margin-right: 10px;
+      width: 200px;
+    }
+    button {
+      padding: 8px 12px;
+      background-color: #28a745;
+      border: none;
+color: white;
+      cursor: pointer;
+    }
+button:hover {
+      background-color: #218838;
+    }
+    #cartContainer {
+      margin-top: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+    }
+th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+th {
+      background-color: #f8f8f8;
+    }
+    #total {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+.remove-btn {
+      background-color: #dc3545;
+    }
+.remove-btn:hover {
+      background-color: #c82333;
+    }
+</style>
+</head>
+<body>
+<h2>Shopping Cart</h2>
+<form id="addItemForm" onsubmit="event.preventDefault(); addItem();">
+<input type="text" id="item" placeholder="Item Name" required />
+<input type="number" id="price" placeholder="Price" step="0.01" min="0" required />
+<button type="submit">Add Item</button>
+</form>
+
+<div id="cartContainer">
+<table id="cartTable">
+<thead>
+<tr>
+<th>Item Name</th>
+<th>Price</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="cartBody"></tbody>
+</table>
+<div id="total">Total: $0.00</div>
+</div>
+
+<script>
+    let cart = [];
+
+    // Load cart from local storage if available
+window.onload = () => {
+conststoredCart = localStorage.getItem('shoppingCart');
+      if (storedCart) {
+        cart = JSON.parse(storedCart);
+renderCart();
+      }
+    };
+
+    function saveCart() {
+localStorage.setItem('shoppingCart', JSON.stringify(cart));
+    }
+
+    function addItem() {
+constitemInput = document.getElementById('item');
+constpriceInput = document.getElementById('price');
+
+constitemName = itemInput.value.trim();
+constitemPrice = parseFloat(priceInput.value).toFixed(2);
+
+      if (!itemName || isNaN(itemPrice) || itemPrice< 0) {
+alert('Please enter a valid item name and price.');
+        return;
+      }
+
+cart.push({ name: itemName, price: parseFloat(itemPrice) });
+saveCart();
+renderCart();
+
+      // Clear inputs after adding
+itemInput.value = '';
+priceInput.value = '';
+    }
+
+    function renderCart() {
+consttbody = document.getElementById('cartBody');
+tbody.innerHTML = '';
+
+      let total = 0;
+
+cart.forEach((item, index) => {
+        total += item.price;
+const row = document.createElement('tr');
+
+constnameTd = document.createElement('td');
+nameTd.textContent = item.name;
+row.appendChild(nameTd);
+
+constpriceTd = document.createElement('td');
+priceTd.textContent = `$${item.price.toFixed(2)}`;
+row.appendChild(priceTd);
+
+constactionTd = document.createElement('td');
+constremoveBtn = document.createElement('button');
+removeBtn.textContent = 'Remove';
+removeBtn.className = 'remove-btn';
+removeBtn.onclick = () => {
+removeItem(index);
+        };
+actionTd.appendChild(removeBtn);
+row.appendChild(actionTd);
+
+tbody.appendChild(row);
+      });
+
+document.getElementById('total').textContent = `Total: $${total.toFixed(2)}`;
+    }
+
+    function removeItem(index) {
+cart.splice(index, 1);
+saveCart();
+renderCart();
+    }
+</script>
+</body>
+</html>
